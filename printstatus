@@ -1,0 +1,43 @@
+#!/bin/bash
+
+echo -ne " >Backing up ...\t"
+MSG=`expr length $(echo -ne " \>Backing up ...\t")`
+# MSG length, i.e. cursor position
+
+log_msg() {
+
+    STATUS="[OK]"
+    UPTODATESTATUS="[Already up-to-date]"
+
+    RED=$(tput setaf 1)
+    YELLOW=
+    GREEN=$(tput setaf 2)
+    NORMAL=$(tput sgr0)
+
+    REDSTATUS="$RED${STATUS}$NORMAL"
+    YELLOWSTATUS="$YELLOW${STATUS}$NORMAL"
+    GREENSTATUS="$GREEN${STATUS}$NORMAL"
+
+
+    let COL=$(tput cols)-3-$1-${#STATUS}+${#GREENSTATUS}
+    # tput cols = terminal width
+    # 3 = <<<
+    # MSG = $1
+    # STATUS = text
+    # COLORSTATUS = wrapped text
+
+    #echo -n $MSG # move this outside the function
+    if [[ $1 -ge ${COL} ]]
+    then
+        let COL=$(tput cols)-3-${#STATUS}+${#GREENSTATUS}
+        # new line, need a new COL, i.e. ${#MSG} = 0
+        printf "\n%${COL}s\n"  "$GREENSTATUS"
+    else
+        printf "%${COL}s\n"  "$GREENSTATUS"
+    fi
+}
+
+log_msg $MSG
+log_msg "this is a test"
+log_msg "this is a very loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooog test"
+exit;

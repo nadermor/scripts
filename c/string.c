@@ -23,6 +23,7 @@ void main() {
 
     ta = message;
     tb = text_2;
+    // Note the fllowing line
     while ( (*tb++ = *ta++) != '\0')
         ;
     printf("Text_2: %s\n", text_2);

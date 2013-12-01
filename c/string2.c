@@ -27,6 +27,7 @@ void main() {
 
     printf("Length of line: %d\n", strlen(line));
 
+    // first occurrence, note that it can be used into iteration
     if ((sub_text = strchr(line, 'W')) != NULL)
         printf("String starting with \"W\" -> %s\n", sub_text);
     else

@@ -3,7 +3,8 @@
  *  Authors: Vivek Ramavajjala, Paul Kube
  */
 
-#include <QtWidgets/QApplication>
+//#include <QtWidgets/QApplication>
+#include <QApplication>
 #include "mainwindow.h"
 
 static const char* DEFAULTLEXFILENAME = "boglex.txt";

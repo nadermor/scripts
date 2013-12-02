@@ -8,8 +8,8 @@
 
 #include "boggleboard.h"
 #include "boggleplayer.h"
-#include <QLabel>
-#include <QMainWindow>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QMainWindow>
 
 namespace Ui {
     class MainWindow;

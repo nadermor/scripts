@@ -6,7 +6,7 @@ using namespace std;
 
 // Constructors
 //======================================================================
-BogglePlayer::BogglePlayerj {
+BogglePlayer::BogglePlayer() {
 }
 BogglePlayer::~BogglePlayer() {
     // clearBoard();
@@ -18,9 +18,8 @@ int BogglePlayer::getIndex(int row, int col) {
     // }
     return row * COLS + col;
 }
-void BogglePlayer::clearBoard() {
     
-std::string BogglePlayer::toLowercse(std::string str) {
+std::string BogglePlayer::toLowercase(std::string str) {
     std::string res;
     for (std::string::iterator p = str.begin(); p != str.end(); p++)
             res += tolower(*p);
@@ -128,12 +127,11 @@ bool BogglePlayer::searchBoard(const std::string &word, int row, int col, vector
         return false; 
     }
     int index = getIndex(row, col);
-    if (isUsed[index]) { return false };
+    if (isUsed[index]) { return false; }
 
-    std::string curr = board[index]; // curr is the string you keep concat'ing
-    int currLen = (int)curr.length() 
-        5
-    int wordLen = (int)word.length()
+    std::string curr = board[index]; // curr is the string on the die
+    int currLen = (int)curr.length();
+    int wordLen = (int)word.length();
     // string.length() gives by default unsigned int, cast to int to stop gcc bitching up
 
     // Before we set isUsed[index] to true:
@@ -148,7 +146,7 @@ bool BogglePlayer::searchBoard(const std::string &word, int row, int col, vector
     // Now set isUsed[index] to ture, 
     // and we didn't match the whole word yet, only it's first segment.
     isUsed[index] = true;   // set this die to used
-    track.push_back(index); // push back it's location
+    track.push_back(index); // push back it's location to the vector
 
     // Need to check the rest of the word, use recurrsion
     std::string rest = word.substr(currLen);
@@ -160,7 +158,7 @@ bool BogglePlayer::searchBoard(const std::string &word, int row, int col, vector
             // if (res) {
             if (this -> searchBoard(rest, nr, nc, track)) {
                 // now vector track is filled
-                // we need to clean the board by cleaning isUsed
+                // we need to clean the board by setting isUsed to false
                 isUsed[index] = false;
                 return true;
             }

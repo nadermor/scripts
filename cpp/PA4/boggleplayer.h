@@ -19,6 +19,8 @@ class BogglePlayer : public BaseBogglePlayer {
         int ROWS, COLS;
         vector<string> board;
         vector<bool> isUsed;
+
+        void clearBoard();
         
         // isOnBoard() returns a vector<int>
         bool searchBoard(const string &word, int row, int col, std::vector<int> &track);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "baseboggleplayer.h"
+#include "boggleutil.h"
 
 #include <set>
 #include <string>
@@ -13,6 +14,18 @@ using std::vector;
 
 class BogglePlayer : public BaseBogglePlayer {
     private:
+        // information of board
+        bool isBoardSet;
+        int ROWS, COLS;
+        vector<string> board;
+        vector<bool> isUsed;
+        
+        // isOnBoard() returns a vector<int>
+        bool searchBoard(const string &word, int row, int col, std::vector<int> &track);
+           
+        // helper functions
+        int getIndex(int row, int col);
+        string toLowercase (string st);
     public:
         BogglePlayer();
         ~BogglePlayer();

@@ -2,34 +2,105 @@
 //#include "boggleutil.h"
 #include <iostream>
 
+using namespace std;
+
+// Constructors
+//======================================================================
+BogglePlayer::BogglePlayerj {
+}
+BogglePlayer::~BogglePlayer() {
+    // clearBoard();
+}
+
+int BogglePlayer::getIndex(int row, int col) {
+    // if (row < 0 || col < 0 || row >= ROWS || col >= COLS) {
+    //     return false;
+    // }
+    return row * COLS + col;
+}
+void BogglePlayer::clearBoard() {
+    
+std::string BogglePlayer::toLowercse(std::string str) {
+    std::string res;
+    for (std::string::iterator p = str.begin(); p != str.end(); p++)
+            res += tolower(*p);
+    return res;
+}
+
 /* name:    buildLexicon
  * Load the words into an efficient data structure that will be used internally as needed by the BogglePlayer.
  * input:   set<string>, containing lexicon given, only lowercase letters a-z
  */
-BogglePlayer::BogglePlayer() {
-}
-BogglePlayer::~BogglePlayer() {
-}
-void BogglePlayer::buildLexicon(const set<string>& word_list) { 
+void BogglePlayer::buildLexicon(const set<std::string>& word_list) { 
              }
 /* name:    setBoard
  * input:   uint rows, uint cols
  */
-void BogglePlayer::setBoard(unsigned int rows, unsigned int cols, string** diceArray) {
-             }
+void BogglePlayer::setBoard(unsigned int rows, unsigned int cols, std::string** diceArray) {
+
+    // BogglePlayer is the object
+    if (isBoardSet) { clearBoard(); }
+    ROWS = rows;
+    COLS = cols;
+
+    // you can allocate memory first in the heap, and assign values in diceArray in it.
+    // assume your have a std::string** board and bool** board_used
+    // this -> board = new std::string*[ROWS];
+    // this -> isUsed = new bool*[ROWS];
+    // for (int i = 0; i < ROWS; i++) {
+    // this -> board[i] = new std::string[COLS];
+    // this -> isUsed[i] = new bool[COLS];
+    //
+    // Note here, you may not assign new with board [ROWS][COLS]. use malloc instead
+    //
+    // then for (i, j) in (rows, cols), copy values from diceArray onto the board
+    // this -> board[i][j] = toLowerCase(diceArray[i][j]);
+    // this -> isUsed[i][j] = false;
+    
+    // instead use a linear vector to represent the matrix, 
+    // and use getIndex to switch back
+    // another thing good to use vector is vector.clear(), 
+    // it's easier to destroy board
+
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            board.push_back(toLowercase(diceArray[i][j]));
+            isUsed.push_back(false);
+        }
+    }
+    isBoardSet = true;
+}
+
+void BogglePlayer::clearBoard() {
+    if (!isBoardSet) return;
+    // if you're using new to create the board on the heap
+    // then you need to delet[]
+    // for (int i = 0; i < Rows; i++) {
+    // delete[] board[i];
+    // delete[] isUsed[i];
+    // }
+    // delete[] board; 
+    // // delete this -> board = new std::string*[ROWS]; where you store your rows, very easy to forget
+    // delete[] isUsed;
+
+    board.clear();  // vector.clear()
+    isUsed.clear(); // vector.clear()
+    // ROWS = COLS = 0;
+    isBoardSet = false;
+}
 /* name:    getAllValidWords
  * input:   at least min_word_length, set<string>* words
  * return:  false: setBoard() || buildLexicon() not called by boggleplayer
  *          ture : both been called
  */
-bool BogglePlayer::getAllValidWords(unsigned int minimum_word_length, set<string>* words) {
+bool BogglePlayer::getAllValidWords(unsigned int minimum_word_length, set<std::string>* words) {
              }
 /* name:    isInLexicon
  * input:   const string&
  * return:  ture if string found in the lexicon by buildLexicon()
  *          false if not found || buildLexicon() not called
  */
-bool BogglePlayer::isInLexicon(const string& word_to_check) {
+bool BogglePlayer::isInLexicon(const std::string& word_to_check) {
              }
 // CHECKPOINT
 /* name:    isOnBoard
@@ -37,10 +108,71 @@ bool BogglePlayer::isInLexicon(const string& word_to_check) {
  * return:  vector<int>, index of array, mark order of string on board R*width+C
  *          empty vector<int> if not possible to form word || setboard() not called
  */
-vector<int> BogglePlayer::isOnBoard(const string& word_to_check) {
-             }
+std::vector<int> BogglePlayer::isOnBoard(const std::string& word_to_check) {
+    std::vector<int> track;
+    std::string word = toLowercase(word_to_check);
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            if (this -> searchBoard(word, i, j, track) ) { 
+                // i, j is the starting point searchBoard()
+                return track;
+            }
+        }
+    }
+    return track;
+}
+bool BogglePlayer::searchBoard(const std::string &word, int row, int col, vector<int> &track) {
+    // Put this test here is better than in getIndex();
+    // because there you would need to check if index >= board.size()
+    if (row < 0 || col < 0 || row >= ROWS || col >= COLS) { 
+        return false; 
+    }
+    int index = getIndex(row, col);
+    if (isUsed[index]) { return false };
+
+    std::string curr = board[index]; // curr is the string you keep concat'ing
+    int currLen = (int)curr.length() 
+        5
+    int wordLen = (int)word.length()
+    // string.length() gives by default unsigned int, cast to int to stop gcc bitching up
+
+    // Before we set isUsed[index] to true:
+    // case1: letters on this die is longer than word
+    if (currLen > wordLen) { return false; } 
+    // case2: letters on this die is not the initial segment of word
+    if (word.substr(0, currLen) != curr) { return false; }
+    // Kube uses substr().compare(curr) != 0
+    // case3: letters on this die match the whole word
+    if (currLen == wordLen) { return true; }
+
+    // Now set isUsed[index] to ture, 
+    // and we didn't match the whole word yet, only it's first segment.
+    isUsed[index] = true;   // set this die to used
+    track.push_back(index); // push back it's location
+
+    // Need to check the rest of the word, use recurrsion
+    std::string rest = word.substr(currLen);
+
+    // iterate over its neighbors
+    for(int nr = row - 1; nr <= row + 1; nr++) {
+        for(int nc = col - 1; nc <= col + 1; nc++) {
+            // bool res = searchBoard(rest, nr, nc, track)
+            // if (res) {
+            if (this -> searchBoard(rest, nr, nc, track)) {
+                // now vector track is filled
+                // we need to clean the board by cleaning isUsed
+                isUsed[index] = false;
+                return true;
+            }
+        }
+    }
+
+    isUsed[index] = false;  // clean the current die
+    track.pop_back();       // removes the last element in the vector,
+    return false;
+}
 /* name:    getCustomBoard
  * for testing
  */
-void BogglePlayer::getCustomBoard(string** &new_board, unsigned int *rows, unsigned int *cols) {
+void BogglePlayer::getCustomBoard(std::string** &new_board, unsigned int *rows, unsigned int *cols) {
              }

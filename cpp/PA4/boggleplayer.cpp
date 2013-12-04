@@ -134,19 +134,24 @@ bool BogglePlayer::searchBoard(const std::string &word, int row, int col, vector
     int wordLen = (int)word.length();
     // string.length() gives by default unsigned int, cast to int to stop gcc bitching up
 
-    // Before we set isUsed[index] to true:
+    // Step1: Before we set isUsed[index] to true
+    // check if the letters is correct
     // case1: letters on this die is longer than word
     if (currLen > wordLen) { return false; } 
     // case2: letters on this die is not the initial segment of word
     if (word.substr(0, currLen) != curr) { return false; }
     // Kube uses substr().compare(curr) != 0
-    // case3: letters on this die match the whole word
+
+    // Step2: Now need to check the die
+    // push back it's location to the vector and record it first
+    track.push_back(index); 
+    // Now we check if we've already found the whole word
+    // case1: letters on this die match the whole word
     if (currLen == wordLen) { return true; }
 
-    // Now set isUsed[index] to ture, 
-    // and we didn't match the whole word yet, only it's first segment.
-    isUsed[index] = true;   // set this die to used
-    track.push_back(index); // push back it's location to the vector
+    // case2: we didn't match the whole word yet, only it's first segment.
+    // Set isUsed[index] to true, I'm going to use the die
+    isUsed[index] = true;   
 
     // Need to check the rest of the word, use recurrsion
     std::string rest = word.substr(currLen);
@@ -157,16 +162,20 @@ bool BogglePlayer::searchBoard(const std::string &word, int row, int col, vector
             // bool res = searchBoard(rest, nr, nc, track)
             // if (res) {
             if (this -> searchBoard(rest, nr, nc, track)) {
-                // now vector track is filled
-                // we need to clean the board by setting isUsed to false
+                // We found our neighbour has the rest of the word 
+                // and now vector track is filled
+                // we need to put down the dice
                 isUsed[index] = false;
                 return true;
             }
         }
     }
 
-    isUsed[index] = false;  // clean the current die
-    track.pop_back();       // removes the last element in the vector,
+    // case3: the letters on the die doesn't match the word
+    // put down the die
+    isUsed[index] = false;  
+    // removes the last element in the vector, cuz we record this die's location at first
+    track.pop_back();
     return false;
 }
 /* name:    getCustomBoard

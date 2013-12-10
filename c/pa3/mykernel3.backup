@@ -1,0 +1,159 @@
+/* mykernel.c: your portion of the kernel
+ *
+ *	Below are procedures that are called by other parts of the kernel.
+ *	Your ability to modify the kernel is via these procedures.  You may
+ *	modify the bodies of these procedures any way you wish (however,
+ *	you cannot change the interfaces).
+ */
+
+#include "aux.h"
+#include "sys.h"
+#include "mykernel3.h"
+
+#define FALSE 0
+#define TRUE 1
+
+/*	A sample semaphore table.  You may change this any way you wish.
+ */
+
+static struct semtab{
+    int queueFront; 
+    int queueRear;
+	int valid;	/* Is this a valid entry (was sem allocated)? */
+	int value;	/* value of semaphore */
+    int blockq[MAXPROCS]; /* A seperate blocking queue for each sem */
+    //semtab[]():queueFront(0),queueRear(0){}
+} ;
+//semtab[MAXSEMS];
+
+struct semtab semtab[MAXSEMS] = {-1,-1};
+
+
+/* build a block queue to utilize shared variables */
+/*static int blockq[MAXPROCS];
+static int front = 0, rear = 0;
+*/
+
+void enqueue (int s, int p)
+{
+
+    semtab[s].queueRear++;
+    semtab[s].queueRear %= MAXPROCS;
+
+    int front = semtab[s].queueFront;
+    int rear = semtab[s].queueRear;
+
+    if (semtab[s].queueFront == semtab[s].queueRear){
+        //Printf("Sem %d 's Block queue is full.\n", s);
+        return;
+    }
+    else {
+        //Printf("Pushing proc %d into Block queue of sem %d. semtab[%d].blockq[%d]=%d.\n", p, s, s, semtab[s].queueRear, p);
+        semtab[s].blockq[rear] = p;
+    }
+}
+
+int dequeue (int s)
+{
+    int p;
+    if (semtab[s].queueFront == semtab[s].queueRear){
+        //Printf("Sem %d 's Block queue is empty.\n", s);
+        return (0);
+    }
+    else {
+        semtab[s].queueFront++;
+        semtab[s].queueFront %= MAXPROCS;
+
+        int front = semtab[s].queueFront;
+        int rear = semtab[s].queueRear;
+
+        p = semtab[s].blockq[front];
+
+        //Printf("Poping proc %d from Block queue of sem %d. %d=semtab[%d].blockq[%d]\n", p, s, p, s, front);
+        return (p);
+    }
+}
+
+
+/*	InitSem () is called when kernel starts up.  Initialize data
+ *	structures (such as the semaphore table) and call any initialization
+ *	procedures here.
+ */
+
+void InitSem ()
+{
+	int s;
+
+	/* modify or add code any way you wish */
+
+	for (s = 0; s < MAXSEMS; s++) {		/* mark all sems free */
+		semtab[s].valid = FALSE;
+	}
+}
+
+/*	MySeminit (p, v) is called by the kernel whenever the system
+ *	call Seminit (v) is called.  The kernel passes the initial
+ * 	value v, along with the process ID p of the process that called
+ *	Seminit.  MySeminit should allocate a semaphore (find a free entry
+ *	in semtab and allocate), initialize that semaphore's value to v,
+ *	and then return the ID (i.e., index of the allocated entry).
+ */
+
+int MySeminit (p, v)
+	int p, v;
+{
+	int s;
+
+	/* modify or add code any way you wish */
+
+	for (s = 0; s < MAXSEMS; s++) {
+		if (semtab[s].valid == FALSE) {
+			break;
+		}
+	}
+	if (s == MAXSEMS) {
+		Printf ("No free semaphores\n");
+		return (-1);
+	}
+
+	semtab[s].valid = TRUE;
+	semtab[s].value = v;
+
+	return (s);
+}
+// Need to solve shared int mutex problem
+
+/*	MyWait (p, s) is called by the kernel whenever the system call
+ *	Wait (s) is called.
+ */
+
+void MyWait (p, s)
+	int p, s;
+{
+	/* modify or add code any way you wish */
+
+	semtab[s].value--;
+    if (semtab[s].value < 0) {
+        //Printf("Blocking process %d\n", p);
+        enqueue(s,p);
+        Block(p);
+    };
+}
+
+/*	MySignal (p, s) is called by the kernel whenever the system call
+ *	Signal (s) is called.
+ */
+
+void MySignal (p, s)
+	int p, s;
+{
+	/* modify or add code any way you wish */
+
+    int last = dequeue(s);
+	semtab[s].value++;
+    if (semtab[s].value <= 0) {
+        //Printf("Unblocking process %d\n", last);
+        Unblock(last);
+    }
+}
+

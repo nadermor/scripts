@@ -31,6 +31,7 @@ std::string BogglePlayer::toLowercase(std::string str) {
  * input:   set<string>, containing lexicon given, only lowercase letters a-z
  */
 void BogglePlayer::buildLexicon(const set<std::string>& word_list) { 
+    
              }
 /* name:    setBoard
  * input:   uint rows, uint cols

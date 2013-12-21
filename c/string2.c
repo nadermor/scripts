@@ -14,13 +14,16 @@
  */
 
 void main() {
-    char line[100], *sub_text;
+    char line[100], line2[100], *sub_text;
 
-    char str[] = "Hello, I am a string.";
+    char str[] = "Hello, I am a string."; // const char*
     printf("Original str: %s\n", str);
     
     strcpy(line, str);
     printf("strcpy(line, str): %s\n", line);
+    // Note its strNcpy, not strcpy
+    strncpy(line2, str, 10);
+    printf("strncpy(line, str, 10): %s\n", line2);
 
     strcat(line, " what are you?");
     printf("strcat(line, newStr): %s\n", line);

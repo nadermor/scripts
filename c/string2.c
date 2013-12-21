@@ -25,8 +25,11 @@ void main() {
     strncpy(line2, str, 10);
     printf("strncpy(line, str, 10): %s\n", line2);
 
+    // strcat vs strncat
     strcat(line, " what are you?");
-    printf("strcat(line, newStr): %s\n", line);
+    printf("strcat(line, \" what are you? \"): %s\n", line);
+    strncat(line, " what are you?", 10);
+    printf("strncat(line, \" what are you? \", 10): %s\n", line);
 
     printf("Length of line: %d\n", strlen(line));
 

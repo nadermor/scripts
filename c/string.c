@@ -16,6 +16,7 @@ void main() {
     // %s means iterately deref a pointer to a char array
 
     i = 0;
+    // Copy the message to text_1, the hard way
     while ( (text_1[i] = message[i]) != '\0')
         i++;
 
@@ -24,7 +25,9 @@ void main() {
     ta = message;
     tb = text_2;
     // Note the fllowing line
+    // Copy the message to text_2, use explicit pointer arithmetic
     while ( (*tb++ = *ta++) != '\0')
         ;
+    // Note the precedence here, ++ is higher than deref '*'
     printf("Text_2: %s\n", text_2);
 }

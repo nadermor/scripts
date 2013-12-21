@@ -1,5 +1,6 @@
 /* 
- * io word count
+ * io word count, use pipe to run the program
+ * eg. cat text | ./a.out
  */
 
 #include <stdio.h>
@@ -30,12 +31,20 @@ void main(void) {
     //         break;
     while ((c = getchar()) != EOF) { // mind the parath's here. made a boo boo
         // printf("%c\n", c);
+        // printf("%d\n", sizeof(c)); // 4
         nc++;
         if (c == '\n') nl++;
         if (c == ' ') nw++;
     }
 
-    printf("This is EOF: %d\n", EOF);
+    // This demonstrates c would be EOF after the loop
+    // and its value is -1
+    printf("This is the last c: %c\n", c); // print ascii -1
+    printf("This is the last c+66: %c\n", c+66); // print ascii 'A'
+    //printf("%d\n", sizeof(c)); // 4, EOF is also 4 bytes
+     
+    printf("\n");
+    printf("This is EOF in %%d: %d\n", EOF); // %% to print %
     printf("Number of characters in file = %d\n", nc);
     printf("Number of lines in file = %d\n", nl);
     printf("Number of words in file = %d\n", nw+1);

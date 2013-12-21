@@ -2,8 +2,10 @@
 #include <math.h>
 
 /* 
+    gcc sine.c -lm (correct)
+    gcc -lm sine.c (wrong)
+
     gcc sine.c without -lm: 
-    gcc -lm sine.c is wrong.
     
     /tmp/cc8spt7g.o: In function `main':
     sine.c:(.text+0x9a): undefined reference to `sin' 
@@ -18,6 +20,7 @@ void main() {
     pi = 4.0 * atan(1.0);
     printf("Value of PI = %f \n", pi);
     printf("Value of M_PI = %f \n\n", M_PI);
+    // M_PI is defined in <math.h>
 
     printf("Angle\tSine\n");
 
@@ -25,6 +28,18 @@ void main() {
     while(angle_degree <= 360) {
         angle_radian = pi * angle_degree / 180.0;
         value = sin(angle_radian);
+
+        /* %.nd     integer (optional n = number of columns; if 0, pad with zeroes)
+         *          i.e. set n cols first, then print from right to left
+         *
+         * %m.nf    float or double (optional m = number of columns, n = number of decimal places)
+         *          note: m includes decimal point
+         *
+         * %ns      string (optional n = number of columns)
+         * %c       character
+         * \n \t    new line / tab
+         * \g       ring the bell ("beep") on the terminal (might be deprecated)
+         */
 
         printf ("%3d\t% f\n", angle_degree, value);
         /* The invisible Pus sign

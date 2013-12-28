@@ -25,7 +25,9 @@
 /* the compiler               */
 
 // All identifiers in C need to be declared before they are used. This is true for functions as well as variables. For functions the declaration needs to be before the first call of the function. A full declaration includes the return type and the number and type of the arguments. This is also called the function prototype.
-int n_char(char[]); // decalaration
+
+// int n_char(char[]); 
+// This is wierd. The decalaration is not needed when include string.h
 void main() {
     int  n;
     char string[50];

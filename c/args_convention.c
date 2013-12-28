@@ -54,7 +54,16 @@ void main(int argc, char** argv) {
                     d1_value = atoi(argv[++i]);
                     d2_value = atoi(argv[++i]);
                     break;
+                default:
+                    fprintf(stderr, "Unknown switch %s\n", argv[i]);
+/* difference between fprintf(stderr) and printf()
+ * if you pipe the output of the program to something else, say a file, 
+ * then usually you only pipe stdout to it - not stderr, so you'd still see the error...
 
+ * in linux, if you want to run a command, but don't want it's output, you'd pipe the output to /dev/null, 
+ * but you probably WOULD want to see any errors generated, 
+ * and then it's handy that the developer has used the 'correct' output handle
+ */
             }
         }
     }

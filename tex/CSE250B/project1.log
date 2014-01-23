@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.1.21)  21 JAN 2014 20:45
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.1.21)  22 JAN 2014 17:08
 entering extended mode
  %&-line parsing enabled.
 **project1.tex
@@ -165,26 +165,26 @@ File: pdftex.def 2010/03/12 v0.04p Graphics/color for pdfTeX
 ) (./project1.aux)
 \openout1 = `project1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Try loading font information for OT1+ptm on input line 21.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 34.
+LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Try loading font information for OT1+ptm on input line 34.
 
 (/usr/share/texmf-texlive/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
-Package hyperref Info: Link coloring OFF on input line 21.
+Package hyperref Info: Link coloring OFF on input line 34.
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
@@ -194,8 +194,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 \c@section@level=\count95
 )
-LaTeX Info: Redefining \ref on input line 21.
-LaTeX Info: Redefining \pageref on input line 21.
+LaTeX Info: Redefining \ref on input line 34.
+LaTeX Info: Redefining \pageref on input line 34.
  (./project1.out)
 (./project1.out)
 \@outlinefile=\write3
@@ -216,34 +216,66 @@ LaTeX Info: Redefining \pageref on input line 21.
 \everyMPtoPDFconversion=\toks17
 )
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 24.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 37.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 24.
+(Font)              <17.28> on input line 37.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 24.
+(Font)              <12> on input line 37.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 37.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 37.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 24.
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 37.
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
-(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 25.
- [1
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 39.
+LaTeX Font Info:    Try loading font information for OT1+pcr on input line 63.
+ (/usr/share/texmf-texlive/tex/latex/psnfss/ot1pcr.fd
+File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
+) [1
 
 
 Non-PDF special ignored!{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-(./project1.aux) ) 
+[2]
+Overfull \hbox (38.03236pt too wide) in paragraph at lines 213--214
+[]\OT1/ptm/m/n/10 Wikipedia ar-ti-cle \OT1/ptm/m/it/10 Bi-nary clas-si-fi-ca-ti
+on\OT1/ptm/m/n/10 . Avail-able at \OT1/pcr/m/n/10 http://en.wikipedia.org/wiki/
+Binary[]
+ []
+
+
+Underfull \vbox (badness 5696) has occurred while \output is active []
+
+ [3]
+Overfull \hbox (8.97255pt too wide) in paragraph at lines 215--216
+[]\OT1/ptm/m/n/10 Wikipedia ar-ti-cle \OT1/ptm/m/it/10 Limited-memory BFGS\OT1/
+ptm/m/n/10 . Avail-able at \OT1/pcr/m/n/10 http://en.wikipedia.org/wiki/
+ []
+
+[4] (./project1.aux) ) 
 Here is how much of TeX's memory you used:
- 4196 strings out of 495061
- 61120 string characters out of 1182621
- 123878 words of memory out of 3000000
- 7334 multiletter control sequences out of 15000+50000
- 11668 words of font info for 25 fonts, out of 3000000 for 9000
+ 4288 strings out of 495061
+ 62357 string characters out of 1182621
+ 133878 words of memory out of 3000000
+ 7396 multiletter control sequences out of 15000+50000
+ 15694 words of font info for 35 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 38i,8n,36p,269b,283s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/s
-hare/texmf-texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/f
-onts/type1/urw/times/utmr8a.pfb>
-Output written on project1.pdf (1 page, 28993 bytes).
+ 38i,8n,36p,943b,387s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</u
+sr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/te
+xmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive
+/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texmf-texlive/fonts/type1
+/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/amsf
+onts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr1
+2.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/s
+hare/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-
+texlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-texlive/font
+s/type1/urw/courier/ucrr8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/
+utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/sha
+re/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on project1.pdf (4 pages, 159275 bytes).
 PDF statistics:
- 43 PDF objects out of 1000 (max. 8388607)
- 7 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 132 PDF objects out of 1000 (max. 8388607)
+ 27 named destinations out of 1000 (max. 500000)
+ 57 words of extra memory for PDF output out of 10000 (max. 10000000)
 

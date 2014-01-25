@@ -1,6 +1,6 @@
 #!/usr/bin/env runhaskell
 
-pos :: Integer -> Bool 
+pos :: Integer -> Bool
 pos x = x > 0
 
 pat :: (Int, Int, Int) -> Int
@@ -9,7 +9,7 @@ pat (x, y, z) = x * (y + z )
 -- | A recursive function
 
 clone :: a -> Int -> [a]
-clone x n = ifThenElse (n == 0) [] (x : clone x (n-1)) 
+clone x n = ifThenElse (n == 0) [] (x : clone x (n-1))
 
 -- | Cleaner, with "pattern matching"
 
@@ -26,17 +26,17 @@ ifThenElse False thenExpr elseExpr = elseExpr
 --
 -- In JavaScript:
 --
--- function ifThenElse(cond, thenB, elseB) { 
+-- function ifThenElse(cond, thenB, elseB) {
 --   return cond ? thenB : elseB ;
 
 -- ifThenElse(true, 1, alert("DIE DIE DIE"));
 
 
--- range lo hi = if lo > hi 
---                 then [] 
+-- range lo hi = if lo > hi
+--                 then []
 --                 else lo : (range (lo+1) hi)
 
-range lo hi 
+range lo hi
   | lo > hi   = []
   | otherwise = lo : range (lo + 1) hi
 

@@ -1,0 +1,221 @@
+\documentclass{article} % For LaTeX2e
+\usepackage{nips13submit_09,times}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+
+% \setlength{\headwidth}{6.40in}
+% \addtolength{\textwidth}{1in}
+% \addtolength{\textheight}{1in}
+% \addtolength{\evensidemargin}{0.5in}
+% \addtolength{\oddsidemargin}{-0.5in}
+% \addtolength{\topmargin}{-0.5in}
+
+\newcommand{\argmax}{\arg\!\max}
+\newcommand{\argmin}{\arg\!\min}
+% \newcommand{\argmax}{\operatornamewithlimits{argmax}} % need \usepackage{amsmath}
+% \DeclareMathOperator*{\argmax}{arg\,max}
+
+\setlength\parindent{0pt}
+
+\title{\bf Logistic Regression with L$_2$ Regularization}
+\author {\textbf{Sandy Wiraatmadja}\\
+	swiraatm@eng.ucsd.edu
+		\And
+		\textbf{Qiheng Wang}\\
+		qiw018@cs.ucsd.edu
+}
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\nipsfinalcopy % Uncomment for camera-ready version
+
+\begin{document}
+
+\maketitle
+
+
+\begin{abstract}
+In this paper, we explore logistic regression with $L_2$ regularization as a binary classification learning model. Given a set of data with different feature values, we want to be able to closely predict what the binary label is for each example. This can be done by training the model on a training set to find the parameters that maximize its log conditional likelihood (LCL). Two optimization methods are analyzed in this paper: Stochastic Gradient Descent (SGD) and Limited-memory BFGS (L-BFGS). The two methods are applied to the Gender Recognition [DCT] dataset from MLcomp. Logistic regression with L-BFGS produces higher test accuracy compared to SGD.
+
+%% TODO: Add experiment result here
+
+\end{abstract}
+
+
+%-----------------------------------------------------------------------------
+% INTRODUCTION
+%-----------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+
+Machine learning, which is a branch of artificial intelligence, has been growing significantly due to the availability of massive data that can be used in developing and training models. One common problem in machine learning is to train a model that can be used for binary statistical classification. For example, given a data of email messages, some classified as spam and some as non-spam, a model can be trained to learn some distinguishing features between spam and non-spam emails. After the learning process is done and the parameters are chosen, the model can be used on a new data of email messages to label each email as either spam or non-spam. Several classifier learning algorithms have been developed throughout the years, such as k-nearest neighbors, linear regression, or support vector machines \cite{wiki_classifier}. One algorithm that we will focus on in this paper is logistic regression.
+
+%% TODO: Add more about logistic regression. How it works (no algorithm here). Just talking about how
+%% it tries to fit the training data to find the parameters tha maximizes the log joint conditional likelihood. In order to find
+%% the maximum  likelihood, we compare 2 optimization algorithm: our implementation of sgd and Mark Schmidt's
+%% implementation of l-bfgs.
+
+Logistic regression model is widely used in probabilistic classification by fitting the training data to the model and find the parameters that maximizes the log joint conditional likelihood (LCL) of the training set.
+In this paper, we analyze how to train a logistic regression model for our binary (Bernoulli) label classification problem with two different gradient-based optimization methods for maximizing the LCL.
+These two algorithms are Stochastic Gradient Descent (SGD) which uses a modified version of a gradient descent method, and Limited-memory Broyden-Fletcher-Goldfarb-Shanno (L-BFGS) which uses the quasi-Newton methods \cite{wiki_lbfgs}.
+We use our own implementation of the SGD algorithm in Matlab, while on the other hand, we used Mark Schmidt's Matlab {\tt minFunc} function which implemented L-BFGS.
+We compare the two models to see how well they perform on the Gender Recognition [DCT] test set from MLcomp.
+
+%-----------------------------------------------------------------------------
+% DESIGN AND ANALYSIS OF ALGORITHMS
+%-----------------------------------------------------------------------------
+\section{Design and Analysis of Algorithms}
+\label{sec:algorithms}
+
+
+%% TODO: Here I want to talk about the objective  function: maximize LCL.Explain about why we want to use
+%% regularization to minimize overfitting -- show the RLCL function and Beta. And then we create 2 sections: SGD and L-BFGS.
+
+
+Logistic regression uses the principle of maximum log conditional likelihood, where we choose a parameter estimate $\hat{\theta}$ that maximizes the log joint conditional likelihood \cite{elkan}. This is the sum of the log conditional likelihood for each training example:
+
+\begin{eqnarray} \label{LCL}
+LCL &=& \sum_{i=1}^{n} \log L(\theta;y_i|x_i) = \sum_{i=1}^{n} \log f(y_i|x_i;\theta) \nonumber \\
+    &=& \sum_{i:y_i=1} \log p_i + \sum_{i:y_i=0} \log (1-p_i) \nonumber \\
+    &=& \sum_{i=1}^{n} \log (p_iy_i +(1-p_i)y_i).
+\end{eqnarray}
+Here we assume the conditional model
+\begin{equation} \label{eq:p_i_alpha_beta}
+p_i = p(Y=1|x;\alpha,\beta) = \sigma(\alpha + \sum_{j=1}^{d}\beta_{j}x_j) = \frac{1}{1+\exp-[\alpha+\sum_{j=1}^{d}\beta_{j}x_j]}
+\end{equation}
+where $\alpha$ is the intercept. For simplification, we assume that $\alpha = \beta_0$ and we add $x_0 = 1$ for all examples, such that (\ref{eq:p_i_alpha_beta}) becomes
+\begin{equation} \label{eq:p_i}
+p_i = \frac{1}{1+\exp-[\sum_{j=0}^{d}\beta_{j}x_j]}.
+\end{equation}
+The objective function then becomes
+\begin{equation} \label{eq:objfun}
+\hat{\beta} = \argmax_{\beta} LCL.
+\end{equation}
+
+
+Since logistic regression tries to fit the training data into the model to maximize LCL, the problem of overfitting tend to arise. The  standard method to solve this problem is regularization, which imposes a penalty on the magnitude of the parameter values \cite{elkan}. However, there is a tradeoff between minimizing the regularization penalty and maximizing the regularized log joint conditional likelihood (RLCL). The objective function for the optimization problem is
+\begin{equation} \label{eq:objfun_reg}
+\hat{\beta} = \argmax_{\beta} RLCL = \argmax_{\beta} (LCL - \mu ||\beta||_2^2)
+\end{equation}
+where $||\beta||_2^2 = \sum_{j=1}^{d} \beta_j^2$ is the squared $L_2$ norm of the parameter vector $\beta$ of length $d$. The constant $\mu$ is the strength of the regularization which quantifies the trade-off between maximizing likelihood and minimizing parameter values, making them close to zero. This is called the quadratic or Tikhonov regularization. Note that since each training data provides information about the intercept of the model $\beta_0$, there is enough information to avoid overfitting of this parameter. Therefore, $\beta_0$ does not need to be regularized.
+
+The partial derivative of LCL with respect to parameter $\beta_j$ is
+\begin{equation} \label{eq:d_LCL}
+\frac{\partial}{\partial \beta_j} LCL = \sum_i(y_i-p_i)x_{ij}
+\end{equation}
+whereas the partial derivative of RLCL with respect to parameter $\beta_j$ is
+\begin{equation} \label{eq:d_RLCL}
+\frac{\partial}{\partial \beta_j} RLCL = \sum_i(y_i-p_i)x_{ij} - 2 \mu \beta_j.
+\end{equation}
+The following subsections discuss the different algorithm of the two optimization methods.
+
+
+\subsection{Stochastic Gradient Descent}
+% TODO:   We are actually doing stochastic gradient ascent here since we want to maximize
+% the objective function -- so Beta := Beta + ...
+% Talk a little bit about the iteration (give the update formula). Convergence checking done only after each epoch,
+% done by checking the difference between the RLCL values between one epoch to the next. The learning rate lambda
+% is made smaller after every epoch by 10%, to have better convergent point and to converge faster.
+
+Since our objective function is a maximization problem, this method should be more appropriately called the stochastic gradient ascent. The parameter values $\beta$ is changed one step at a time following the gradient until it finally converges to the local maxima point.
+
+The regular gradient descent update rule of the parameter $\beta_j$ is
+\begin{equation} \label{eq:update_rule_regular}
+\beta_j := \beta_j + \lambda \frac{\partial}{\partial \beta_j} RLCL
+\end{equation}
+where $\lambda$ is the learning rate, denoting how big of a step each update should take.
+
+However, calculating the partial derivatives per iteration can be time consuming as each requires $O(nd)$ time where $n$ is the training example size and $d$ is the number of features.
+To minimize computation, we use stochastic gradient descent method, where we get a random approximation to the partial derivatives by just looking at one randomly chosen example at a time to update $\beta$. Thus, we can drop $n$ and do it in much less time, around $O(d)$ time, independent of the size of the training data. This is extremely useful for very large training set.
+
+By using SGD, the parameter update rule then becomes
+\begin{equation} \label{eq:update_rule_stochastic_i}
+\beta_j := \beta_j + \lambda [(y_i - p_i)x_j - 2 \mu \beta_j]
+\end{equation}
+for any randomly chosen $i^{th}$ example.
+
+\noindent And the update rule for the whole parameter vector $\bar{\beta}$ is
+\begin{equation} \label{eq:update_rule_stochastic}
+\bar{\beta} := \bar{\beta} + \lambda (\bar{y} - \bar{p})^{T}X
+\end{equation}
+which should be done at least once after all epochs of stochastic gradient ascent. An epoch is a complete update for every example in the dataset.
+
+Convergence is reached when the change in the objective value, RLCL, is within a certain threshold which we hold constant at $10^{-3}$. Typically, this check is done in the middle of an epoch, which means that the iteration can stop if it reaches convergence before even going through the entire examples. This can save a lot of time when dealing with massive data. However, we decided to do the convergence check after every epoch. The learning rate $\lambda$ is made smaller by $10\%$ after every epoch. This is done so that convergence is reached faster, and also bigger $\lambda$ means bigger step and this might cause unstability where the objective function cannot reach its true local maxima.
+
+
+\subsection{L-BFGS}
+%% L-BFGS: the minFunc function is minimizing so we do Beta := Beta - ... and the objective function becomes
+%% Beta = argmin -LCL + ...
+%% include some wiki information on this
+
+L-BFGS is an optimization algorithm of the quasi-Newton method using a limited amount of computer memory\cite{wiki_lbfgs}. This method is often used for parameter estimation. As mentioned above, for the purpose of this paper, we use Mark Schmidt's {\tt minFunc} function, written in Matlab, that implements the L-BFGS algorithm. This function is a minimizing function. Therefore, we need to modify the objective function (\ref{eq:objfun_reg}) to be
+\begin{eqnarray} \label{eq:objfun_reg_minimize}
+\hat{\beta} &=& \argmin_{\beta} (- RLCL) \nonumber \\
+            &=& \argmin_{\beta} (- LCL + \mu ||\beta||_2^2)
+\end{eqnarray}
+
+
+%-----------------------------------------------------------------------------
+% DESIGN OF EXPERIMENTS
+%-----------------------------------------------------------------------------
+\section{Design of Experiments}
+\label{sec:experiments}
+
+%% TODO: talk about the implementation:
+% in matlab, using the dataset from gender recognition (559 training, 239 test, 800 features).
+% 1. Preprocess data -- normalize to mean zero and unit variance. make sure to use the same normalization factor on test data
+% 2. Randomize order of training set
+% 3. split training data: 80% training (447 samples, train param Beta), 20% validation (112 samples, train hyperparameters)
+% the hyperparameters are chosen using grid search. For SGD there are 2: mu and lambda (10^-10, 10^-9, ..., 10^10)
+% For L-BFGS, there is only one hyperparam: mu (10^-10, 10^-9,..., 10^10).
+% 4. Use intialization Beta = 0
+% 5. Max epoch = 100
+% 6. Use checkgrad to verify that our derivatives are correct
+
+
+
+
+
+
+%-----------------------------------------------------------------------------
+% RESULTS OF EXPERIMENTS
+%-----------------------------------------------------------------------------
+\section{Results of Experiments}
+\label{sec:results}
+
+% TODO: add figures here
+% 1. give the best hyperparam values we found in table
+% 2.
+
+
+
+
+
+%-----------------------------------------------------------------------------
+% FINDINGS AND LESSONS LEARNED
+%-----------------------------------------------------------------------------
+\section{Findings and Lessons Learned}
+\label{sec:conclusion}
+
+% TODO: data is too small. Different runs can give very
+% different results. For training, 447 samples and we have 800 feature --> overfitting, classification learning will fail to produce a robust model.
+
+
+
+
+%-----------------------------------------------------------------------------
+% BIBLIOGRAPHY
+%-----------------------------------------------------------------------------
+\begin{thebibliography}{1}
+
+\bibitem{wiki_classifier} Wikipedia article {\em Binary classification}. Available at {\tt http://en.wikipedia.org/wiki/Binary\_ classification}.
+
+\bibitem{wiki_lbfgs} Wikipedia article {\em Limited-memory BFGS}. Available at {\tt http://en.wikipedia.org/wiki/ Limited-memory\_BFGS}.
+
+\bibitem{elkan} Elkan, C. (2014). {\em Maximum Likelihood, Logistic Regression, and Stochastic Gradient Training}. Available at {\tt http://cseweb.ucsd.edu/$\sim$elkan/250B/logreg.pdf}.
+
+\end{thebibliography}
+
+\end{document}

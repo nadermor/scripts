@@ -164,8 +164,34 @@ Part 2: Drawing Fractals
 Write a function `sierpinskiCarpet` that displays this figure on the
 screen:
 
+> fillSqu :: Window -> Int -> Int -> Int -> IO ()
+> fillSqu w x y size = drawInWindow w (withColor Blue (polygon [(x,y),(x+size,y),(x+size,y+size),(x,y+size),(x,y)]))
+
+> minSize :: Int
+> minSize = 3
+
+> sierpinskiSquare :: Window -> Int -> Int -> Int -> IO()
+> sierpinskiSquare w x y size = if size <= minSize
+>                               then fillSqu w x y size
+>                               else let size2 = size `div` 3
+>                                    in do sierpinskiSquare w x y size2
+>                                          sierpinskiSquare w (x+size2) y size2
+>                                          sierpinskiSquare w (x+2*size2) y size2
+>                                          sierpinskiSquare w x (y+size2) size2
+>                                          sierpinskiSquare w (x+2*size2) (y+size2) size2
+>                                          sierpinskiSquare w x (y+2*size2) size2
+>                                          sierpinskiSquare w (x+size2) (y+2*size2) size2
+>                                          sierpinskiSquare w (x+2*size2) (y+2*size2) size2
+
 > sierpinskiCarpet :: IO ()
-> sierpinskiCarpet = error "Define me!"
+> sierpinskiCarpet = runGraphics (
+>                      do w <- openWindow "The Sierpinski Carpet" (500, 500)
+>                         sierpinskiSquare w 0 0 501
+>                         k <- getKey w
+>                         closeWindow w )
+
+withColor :: Color -> Graphic -> Graphic
+data Color Black | Blue | Green | Cyan | Red | Magenta | Yellow | White
 
 Note that you either need to run your program in `SOE/src` or add this
 path to GHC's search path via `-i/path/to/SOE/src/`.
@@ -176,8 +202,28 @@ Also, the organization of SOE has changed a bit, so that now you use
    own design.  Be creative!  The only constraint is that it shows some
    pattern of recursive self-similarity.
 
+> fillCir :: Window -> Int -> Int -> Int -> IO ()
+> fillCir w x y size = drawInWindow w (withColor Magenta (ellipse (x,y) (x+size,y+size)))
+
+> sierpinskiCir :: Window -> Int -> Int -> Int -> IO()
+> sierpinskiCir w x y size = if size <= 20
+>                               then fillCir w x y size
+>                               else let size2 = size `div` 3
+>                                    in do sierpinskiCir w x y size2
+>                                          sierpinskiCir w x (y+size2) size2
+>                                          sierpinskiCir w x (y+2*size2) size2
+>                                          sierpinskiCir w (x+size2) (y+size2) size2
+>                                          sierpinskiCir w (x+2*size2) y size2
+>                                          sierpinskiCir w (x+2*size2) (y+size2) size2
+>                                          sierpinskiCir w (x+2*size2) (y+2*size2) size2
+
 > myFractal :: IO ()
-> myFractal = error "Define me!"
+> myFractal = runGraphics (
+>             do w <- openWindow "My Fractal" (500, 500)
+>                sierpinskiCir w 0 0 500
+>                k <- getKey w
+>                closeWindow w )
+
 
 Part 3: Recursion Etc.
 ----------------------

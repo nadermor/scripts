@@ -1,4 +1,4 @@
-SOEPATH=/Users/pmr/src/SOE/src/
+SOEPATH=../SOE/src
 
 all:
 	ghc -i${SOEPATH} --make Main

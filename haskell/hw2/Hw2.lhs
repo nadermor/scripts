@@ -8,7 +8,7 @@ title: Homework #2, Due Friday 2/24/14
 > import Control.Applicative hiding (empty, (<|>))
 > import Data.Map
 > import Control.Monad.State hiding (when)
-> import Text.Parsec hiding (State, between)
+> import Text.Parsec hiding (State)
 > import Text.Parsec.Combinator hiding (between)
 > import Text.Parsec.Char
 > import Text.Parsec.String
@@ -195,8 +195,8 @@ change, when we add exceptions and such.
 the value of the "current store" in a variable `s` use `s <- get`.
 
 > evalE (Var x)      = do s <- get
->                         case (Map.lookup x s) of Just val -> return val
->                                                  Nothing -> return $ IntVal 0
+>                         case (Data.Map.lookup x s) of Just val -> return val
+>                                                       Nothing -> return $ IntVal 0
 > evalE (Val v)      = return v
 > evalE (Op o e1 e2) = do v1 <- evalE e1
 >                         v2 <- evalE e2
@@ -225,7 +225,7 @@ do `put s`.
 >                             evalS s2
 > evalS (Assign x e )    = do v <- evalE e
 >                             s <- get
->                             put $ Map.insert x v s
+>                             put $ Data.Map.insert x v s
 > evalS (If e s1 s2)     = do v <- evalE e
 >                             case v of
 >                               BoolVal True  -> evalS s1
@@ -295,25 +295,33 @@ First, we will write parsers for the `Value` type
 To do so, fill in the implementations of
 
 > intP :: Parser Value
-> intP = error "TBD"
+> intP = do str <- many1 digit
+>           return $ IntVal ((read str) :: Int)
 
 Next, define a parser that will accept a
 particular string `s` as a given value `x`
 
 > constP :: String -> a -> Parser a
-> constP s x = error "TBD"
+> constP s x = string s >> return x
 
 and use the above to define a parser for boolean values
 where `"true"` and `"false"` should be parsed appropriately.
 
 > boolP :: Parser Value
-> boolP = error "TBD"
+> boolP =  constP "true" (BoolVal True) <|>
+>          constP "false" (BoolVal False)
 
 Continue to use the above to parse the binary operators
 
 > opP :: Parser Bop
-> opP = error "TBD"
-
+> opP = constP "+" Plus <|>
+>       constP "-" Minus <|>
+>       constP "*" Times <|>
+>       constP "/" Divide <|>
+>       constP ">" Gt <|>
+>       constP ">=" Ge <|>
+>       constP "<" Lt <|>
+>       constP "<=" Le
 
 Parsing Expressions
 -------------------
@@ -326,8 +334,27 @@ variable is one-or-more uppercase letters.
 
 Use the above to write a parser for `Expression` values
 
+> fromOpP :: Parser Bop -> Parser (Expression -> Expression -> Expression)
+> fromOpP = fmap Op
+
 > exprP :: Parser Expression
-> exprP = error "TBD"
+> exprP = ((parseVar <|> parseVal <|> parseParent) >>= parseOp)
+>   where parseVar = do x <- skipspaceP $ varP
+>                       return $ Var x
+>         parseVal = do x <- skipspaceP $ valueP
+>                       return $ Val x
+>         parseOp x  =  grab x <|> return x
+>         grab  x   =  do o <- skipspaceP $ opP
+>                         y <- exprP
+>                         return $ Op o x y
+>         parseParent =  do skipspaceP $ char '('
+>                           y <- exprP
+>                           skipspaceP $ char ')'
+>                           return y
+
+> skipspaceP p = do spaces
+>                   x <- p
+>                   spaces >> return x
 
 Parsing Statements
 ------------------
@@ -335,7 +362,30 @@ Parsing Statements
 Next, use the expression parsers to build a statement parser
 
 > statementP :: Parser Statement
-> statementP = error "TBD"
+> statementP = skip <|> ((parseAssign <|> parseIf <|> parseWhile) >>= parseSequence)
+>   where skip = constP "skip" Skip
+>         parseAssign = do x <- varP
+>                          skipspaceP $ string ":="
+>                          e <- exprP
+>                          return (Assign x e)
+>         parseIf  = do skipspaceP $ string "if"
+>                       x <- exprP
+>                       skipspaceP $ string "then"
+>                       s1 <- statementP
+>                       skipspaceP $ string "else"
+>                       s2 <- statementP
+>                       skipspaceP $ string "endif"
+>                       return (If x s1 s2)
+>         parseWhile = do skipspaceP $ string "while"
+>                         x <- exprP
+>                         skipspaceP $ string "do"
+>                         s <- statementP
+>                         skipspaceP $ string "endwhile"
+>                         return (While x s)
+>         parseSequence x = grab x <|> return x
+>         grab x = do skipspaceP $ char ';'
+>                     s <- statementP
+>                     return (Sequence x s)
 
 When you are done, we can put the parser and evaluator together
 in the end-to-end interpreter function

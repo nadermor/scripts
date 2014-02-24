@@ -8,7 +8,7 @@ title: Homework #2, Due Friday 2/24/14
 > import Control.Applicative hiding (empty, (<|>))
 > import Data.Map
 > import Control.Monad.State hiding (when)
-> import Text.Parsec hiding (State)
+> import Text.Parsec hiding (State, between)
 > import Text.Parsec.Combinator hiding (between)
 > import Text.Parsec.Char
 > import Text.Parsec.String

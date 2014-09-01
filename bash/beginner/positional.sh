@@ -11,3 +11,5 @@ echo
 echo "The total number of positional parameters is $#."
 echo "This is \$*: $*."
 echo "This is \$@: $@."
+echo "This is \$0: $0."
+echo "This is \$_: $_."

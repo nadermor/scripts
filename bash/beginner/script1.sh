@@ -42,7 +42,3 @@ echo
 
 echo "I'm giving you back your prompt now."
 echo
-
-
-
-

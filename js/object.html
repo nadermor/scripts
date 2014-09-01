@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JS object</title>
+		<meta charset="utf-8" />
+		<script type="text/javascript" charset="utf-8">
+			var hotel = {
+				name : 'hotel1',
+				rooms : 40,
+				booked: 25,
+				checkAvailability: function(){
+					return this.rooms - this.booked;
+				}
+			}
+			//alert(hotel);
+			//var hotelName = hotel.name;
+			var hotelName = hotel['name'];
+			// using array syntax can update a value, only works for property, not function, need below syntax
+			//alert(hotelName);
+			var checkAvailability = hotel['checkAvailability']();
+			//alert(checkAvailability);
+			var roomsfree = hotel.checkAvailability();
+			//alert(roomsfree);
+
+
+			var hotel2 = new Object();
+			//alert(hotel2);
+			hotel2.name = "hotel2";
+			hotel2.rooms = 40;
+			hotel2.booked = 25;
+			hotel2.checkAvailability = function() {
+				return this.rooms - this.booked;
+			}
+			hotel2['checkAvailability'] = function() {alert(1)}
+			hotel2.checkAvailability();
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
